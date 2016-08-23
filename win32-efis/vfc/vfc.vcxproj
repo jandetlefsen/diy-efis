@@ -27,6 +27,7 @@
     <ClCompile Include="..\..\gdi-lib\window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\can-aerospace\can_msg.h" />
     <ClInclude Include="..\..\gdi-lib\alloc.h" />
     <ClInclude Include="..\..\gdi-lib\application.h" />
     <ClInclude Include="..\..\gdi-lib\assert.h" />

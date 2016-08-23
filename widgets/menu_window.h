@@ -487,7 +487,13 @@ public:
   popup_menu_t *load_popup(const std::string &name);
 
   void update_background(canvas_t &background_canvas);
-private:
+
+  /**
+   *  load all of the root menu's after assigning the handler
+   *  @param can_provider message provider for the window
+  */
+  void load_menus(canaerospace_provider_t *can_provider);
+  private:
   virtual bool ev_msg(const msg_t &);
 
   /**
@@ -516,8 +522,6 @@ private:
   short _menu_timer; // as a press/rotate is given this sets the tick-timeout
 
   std::string _section;
-
-  void load_menus();
 
   typedef std::map<std::string, menu_t *> menus_t;
   menus_t _menus;

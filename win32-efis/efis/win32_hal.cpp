@@ -486,7 +486,7 @@ kotuku::layout_window_t * kotuku::win32_hal_t::root_window()
 
 kotuku::menu_window_t *kotuku::win32_hal_t::menu_window()
   {
-  if(_menu_window = 0)
+  if(_menu_window == 0)
     {
     int window_x;
     int window_y;
@@ -514,7 +514,7 @@ kotuku::menu_window_t *kotuku::win32_hal_t::menu_window()
 
     RegisterClassW(&wndclass);
 
-    HWND hwnd = CreateWindowExW(0, class_name, screen_name, WS_VISIBLE | WS_POPUP | WS_CAPTION,
+    HWND hwnd = CreateWindowExW(0, class_name, screen_name, WS_POPUP | WS_CAPTION,
       window_x, window_y, width, height,
       _screen->handle(), NULL, NULL, NULL);
 
@@ -530,7 +530,7 @@ kotuku::menu_window_t *kotuku::win32_hal_t::menu_window()
 
 kotuku::notification_window_t *kotuku::win32_hal_t::alert_window()
   {
-  if(_menu_window = 0)
+  if(_alert_window == 0)
     {
     int window_x;
     int window_y;

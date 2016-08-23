@@ -94,7 +94,7 @@ static void filter_worker(void *parg)
   while (true)
     {
     // we update the filter at 10hz
-    uint32_t next_run = last_run + 10;
+    uint32_t next_run = last_run + 100;
     uint32_t delay;
     uint32_t update_delay;
 
@@ -107,7 +107,7 @@ static void filter_worker(void *parg)
       delay = next_run - delay; // calculate how many MS to wait
 
     if (delay > 0)
-      // we update the filter every 200msec
+      // we update the filter every 100msec
       wait(&filter_semp, delay);
 
     delay = ticks();
@@ -132,49 +132,7 @@ static void filter_worker(void *parg)
       publish_float(ahrs_state.gyro.y, id_pitch_rate);
       publish_float(ahrs_state.gyro.x, id_roll_rate);
       publish_float(ahrs_state.gyro.z, id_yaw_rate);
-
-#ifdef SIMPLE_AHRS
-      // check to see if the kalman filter has started generating information
-      if (get_datapoint_short(id_ahrs_status) < 2)
-        {
-        // roll: Rotation around the X-axis. -180 <= roll <= 180                                          
-        // a positive roll angle is defined to be a clockwise rotation about the positive X-axis          
-        //                                                                                                
-        //                    y                                                                           
-        //      roll = atan2(---)                                                                         
-        //                    z                                                                           
-        //                                                                                                
-        // where:  y, z are returned value from accelerometer sensor                                      
-        orientation.x = (float) atan2(ahrs_state.accel.y, ahrs_state.accel.z);
-
-        // pitch: Rotation around the Y-axis. -180 <= roll <= 180                                         
-        // a positive pitch angle is defined to be a clockwise rotation about the positive Y-axis         
-        //                                                                                                
-        //                                 -x                                                             
-        //      pitch = atan(-------------------------------)                                             
-        //                    y * sin(roll) + z * cos(roll)                                               
-        //                                                                                                
-        // where:  x, y, z are returned value from accelerometer sensor                                   
-        if (ahrs_state.accel.y * sin(orientation.x) + ahrs_state.accel.z * cos(orientation.x) == 0)
-          orientation.y = ahrs_state.accel.x > 0 ? (PI_F / 2) : (-PI_F / 2);
-        else
-          orientation.y = (float) atan(-ahrs_state.accel.x / (ahrs_state.accel.y * sin(orientation.x) + \
-                                                                       ahrs_state.accel.z * cos(orientation.x)));
-
-        // heading: Rotation around the Z-axis. -180 <= roll <= 180                                       
-        // a positive heading angle is defined to be a clockwise rotation about the positive Z-axis       
-        //                                                                                                
-        //                                       z * sin(roll) - y * cos(roll)                            
-        //   heading = atan2(--------------------------------------------------------------------------)  
-        //                    x * cos(pitch) + y * sin(pitch) * sin(roll) + z * sin(pitch) * cos(roll))   
-        //                                                                                                
-        // where:  x, y, z are returned value from magnetometer sensor                                    
-        orientation.z = (float) atan2(ahrs_state.mag.z * sin(orientation.x) - ahrs_state.mag.y * cos(orientation.x), \
-                                            ahrs_state.mag.x * cos(orientation.y) + \
-                                            ahrs_state.mag.y * sin(orientation.y) * sin(orientation.x) + \
-                                            ahrs_state.mag.z * sin(orientation.y) * cos(orientation.x));
-        }
-#else
+      
       ahrs_update(ahrs_state.gyro.x, ahrs_state.gyro.y, ahrs_state.gyro.z,
                   ahrs_state.accel.x, ahrs_state.accel.y, ahrs_state.accel.z,
                   ahrs_state.mag.x, ahrs_state.mag.y, ahrs_state.mag.z,
@@ -191,7 +149,6 @@ static void filter_worker(void *parg)
 
       orientation.z = atan2(2 * ahrs_orientation.q0 * ahrs_orientation.q3 - 2 * ahrs_orientation.q1 * ahrs_orientation.q2,
                             1 - 2 * q0q0 - 2 * q2q2);
-#endif
 
       publish_float(0, id_yaw_angle);
       publish_float(orientation.y, id_pitch_angle);
@@ -199,24 +156,26 @@ static void filter_worker(void *parg)
 
       // indicate that IMU values are published
       publish_short(2, id_ahrs_status);
+      
+      // calculate the compass heading corrected for pitch and roll
+      float roll  = atan2(ahrs_state.accel.y, sqrt(ahrs_state.accel.x * ahrs_state.accel.x + ahrs_state.accel.z * ahrs_state.accel.z));
+      float pitch = atan2(ahrs_state.accel.x, sqrt(ahrs_state.accel.y * ahrs_state.accel.y + ahrs_state.accel.z * ahrs_state.accel.z));
 
-      /*      
-            float cos_pitch = cos(orientation.y);
-            float sin_pitch = sin(orientation.y);
-            float sin_roll = sin(orientation.x);
-            float cos_roll = cos(orientation.x);
+      float cos_pitch = cos(pitch);
+      float sin_pitch = sin(pitch);
+      float sin_roll = sin(roll);
+      float cos_roll = cos(roll);
 
-            compass.x = ahrs_state.mag.x * cos_pitch +
-                        ahrs_state.mag.y * sin_roll * sin_pitch +
-                        ahrs_state.mag.z * cos_roll * sin_pitch;
-            compass.y = ahrs_state.mag.y * cos_roll -
-                        ahrs_state.mag.z * sin_roll;
+      compass.y = ahrs_state.mag.x * cos_roll +
+                  ahrs_state.mag.y * sin_roll * sin_pitch -
+                  ahrs_state.mag.z * sin_roll * cos_pitch;
+      compass.x = ahrs_state.mag.y * cos_pitch -
+                  ahrs_state.mag.z * sin_pitch;
 
-            compass.z = -atan2(-compass.y, compass.x);
+      compass.z = -atan2(compass.y, compass.x);
 
-            hdgd = (short) radians_to_degrees(compass.z);
-       * */
-      hdgd = (short) radians_to_degrees(orientation.z);
+      hdgd = (short) radians_to_degrees(compass.z);
+
       while (hdgd < 0)
         hdgd += 360;
       while (hdgd >= 360)

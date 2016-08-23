@@ -88,10 +88,10 @@ public:
     {
     return _section;
     }
-protected:
-  virtual bool ev_msg(const msg_t &) = 0;
+  protected:
 
-  void set_can_provider(canaerospace_provider_t *can_provider);
+    void set_can_provider(canaerospace_provider_t *can_provider);
+    virtual bool ev_msg(const msg_t &) = 0;
 
   // look up a settings and return the enumeration value
   // returns -1 if setting not found otherwise integer index of lookup

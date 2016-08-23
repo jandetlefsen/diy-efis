@@ -214,7 +214,7 @@ static can_parameter_type_0_t altitude_defn =
     .can_id = id_static_pressure,
     .publish_rate = 500,
     .scale = 1111.111111,
-    .offset = 105.5555556
+    .offset = 90.0
     };
 
 static can_parameter_type_1_t nodeid_defn = 
@@ -285,7 +285,7 @@ static can_parameter_type_1_t airtime_defn =
   {
   .hdr.data_type = p1t_ulong,
   .hdr.length = SIZE_ULONG_SETTING,
-  .value.ULONG = 4910      // 49.1 hrs 
+  .value.ULONG = 0000      // xx.xx hrs 
   };
 
 static parameter_definition_t parameters[memid_last] = {
@@ -554,6 +554,8 @@ static eeprom_params_t ee_params =
   .updated = parameter_updated
   };
 
+
+static uint32_t last_tick;
 
 int main(void)
   {
@@ -900,7 +902,7 @@ static float calculate_altitude(analog_channel_definition_t *channel, float valu
   return value;
   }
 
-static uint32_t last_tick;
+
 static bool aircraft_flying = false;
 
 // the value is the dynamic pressure in HPA.

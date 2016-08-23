@@ -115,6 +115,10 @@ bool kotuku::canaerospace_provider_t::publishing_enabled(bool is_it)
   {
   bool was_it = _publishing_enabled;
   _publishing_enabled = is_it;
+
+  if (!was_it && is_it /* && get_status() == thread_t::suspended*/)
+    resume();
+
   return was_it;
   }
 

@@ -83,6 +83,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\can-aerospace\can_msg.c" />
     <ClCompile Include="comm_device.cpp" />
     <ClCompile Include="gdi_screen.cpp" />
     <ClCompile Include="main.cpp" />

@@ -140,5 +140,8 @@
     <ClInclude Include="..\..\gdi-lib\window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\can-aerospace\can_msg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

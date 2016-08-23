@@ -33,6 +33,9 @@
     <ClCompile Include="windows_screen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\can-aerospace\can_msg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="comm_device.h">

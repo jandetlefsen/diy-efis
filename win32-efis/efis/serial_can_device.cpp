@@ -580,7 +580,7 @@ result_t kotuku::serial_can_device_t::send(const can_msg_t &msg)
 
   strcat(buffer, "\r");
 
-  //trace_error("CANBUS Write %s\n", buffer);
+  trace_error("CANBUS Write %s\n", buffer);
 
   result_t result;
   if(failed(result = _worker->send_msg(buffer, strlen(buffer))))

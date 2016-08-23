@@ -192,27 +192,6 @@ void kotuku::menu_window_t::init(const char *section)
     _menu_start_y = window_rect().height() - _menu_rect_y;
   else
     _menu_start_y = value;
-
-  load_menus();
-
-  subscribe(id_key0);
-  subscribe(id_key1);
-  subscribe(id_key2);
-  subscribe(id_key3);
-  subscribe(id_key4);
-  subscribe(id_decka);
-  subscribe(id_deckb);
-  subscribe(id_menu_up);
-  subscribe(id_menu_dn);
-  subscribe(id_menu_left);
-  subscribe(id_menu_right);
-  subscribe(id_menu_ok);
-  subscribe(id_menu_cancel);
-  subscribe(id_menu_edit);
-  subscribe(id_menu_back);
-  subscribe(id_menu_select);
-  subscribe(id_qnh);
-  subscribe(id_heading);
   }
 
 kotuku::menu_window_t::menu_window_t(widget_t &parent, const rect_t &extents, const char *section)
@@ -565,8 +544,30 @@ void kotuku::menu_window_t::pop_menu()
   _menu_stack.pop_back();
   }
 
-void kotuku::menu_window_t::load_menus()
+void kotuku::menu_window_t::load_menus(canaerospace_provider_t *can_provider)
   {
+  set_can_provider(can_provider);
+
+  // subscribe to the keyboard events
+  subscribe(id_key0);
+  subscribe(id_key1);
+  subscribe(id_key2);
+  subscribe(id_key3);
+  subscribe(id_key4);
+  subscribe(id_decka);
+  subscribe(id_deckb);
+  subscribe(id_menu_up);
+  subscribe(id_menu_dn);
+  subscribe(id_menu_left);
+  subscribe(id_menu_right);
+  subscribe(id_menu_ok);
+  subscribe(id_menu_cancel);
+  subscribe(id_menu_edit);
+  subscribe(id_menu_back);
+  subscribe(id_menu_select);
+  subscribe(id_qnh);
+  subscribe(id_heading);
+
   // we get the root menu
   std::string menu_name;
   if(failed(the_hal()->get_config_value(_section.c_str(), "root-menu", menu_name)))
