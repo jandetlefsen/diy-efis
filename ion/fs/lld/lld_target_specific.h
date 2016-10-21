@@ -1,0 +1,81 @@
+#ifndef LLD_TARGET_SPECIFIC_INC_H
+#define LLD_TARGET_SPECIFIC_INC_H
+
+/* lld_target_specific.h - Source Code for Cypress's Low Level Driver */
+
+
+/**********************************************************
+* Enable trace buffer macro.                              *
+**********************************************************/
+//#define TRACE    
+//#define EXTEND_ADDR
+
+/**********************************************************
+* Define LLD target device: flash.                        *
+***********************************************************/ 
+#define LLD_DEV_FLASH
+//#define LLD_DEV_SIM
+
+#include "S29GLxxxS.h"
+
+/**************************************************** 
+* Define how to access your hardware.         *
+* Describe to the LLD the flash chip configuration  *
+* un-comment the one that matches your system       *
+****************************************************/
+//#define LLD_CONFIGURATX16_AS_X16    /* no-interleaving, a single x16 device in x16 mode  */
+ #define LLD_CONFIGURATX8X16_AS_X16   /* no-interleaving, a single x8/x16 device in x16 mode */
+// #define LLD_CONFIGURATX8X16_AS_X8    /* no-interleaving, a single x8/x16 device in x8 mode */
+// #define LLD_CONFIGURATX16_AS_X32     /* two x16 devices interleaved to form x32 */                  
+// #define LLD_CONFIGURATX8X16_AS_X32   /* two x8/x16 devices interleaved to form x32 */ 
+// #define LLD_CONFIGURATX8_AS_X8       /* no-interleaving, a single x8 device in x8 mode
+// #define LLD_CONFIGURATX8_AS_X32      /* special case when four X8X16 devices in X8 mode interleaving to form X32 */
+// #define LLD_CONFIGURATX8_AS_X16      /* special case when two X8X16 devices in X8 mode interleaving to form X16 */    
+// #define LLD_CONFIGURATX32_AS_X32   /* no-interleaving, a single x32 device in x32 mode  */
+
+/************************************************************************
+* determines whether or not your system supports timestamp in the trace *
+* can also be used to turn off printing of the timestamp in the trace   *
+************************************************************************/
+/* #define PRINT_TIMESTAMP  */
+
+/************************************************************************
+* Creates lld_printf.log file and writes all the LLD_PRINTFs to it      *
+************************************************************************/
+/* #define LLD_PRINTF_LOGFILE */
+
+/************************************************************************
+* Pause between Erase Suspend cmd                                       *
+************************************************************************/
+/* #define PAUSE_BETWEEN_ERASE_SUSPENDS*/
+
+/*************************************************************************
+* Displays file name and line number information when an LLD_ASSERT call *
+* fails.  This information is displayed in LLDCmdlineAssert().           *
+*************************************************************************/
+/* #define ASSERT_DIAGNOSTICS */
+
+/*************************************************************************
+* enables code to execute commands from a file instead of directly from *
+* the command line. 
+**************************************************************************/
+/* #define ENABLE_SCRIPTING_MACRO */
+
+/***************************************************
+* Enable NST (NOR Supper Tests) 
+****************************************************/
+//#define NST_TESTS
+
+/***************************************************
+* Enable CATest (Competitive Analysis Tests) 
+****************************************************/
+/* #define CA_TEST */
+
+
+/********************************************************
+* Enable if user wants to implements its own FLASH_RD/WR
+*********************************************************/
+/* #define USER_SPECIFIC_CMD */
+
+
+#endif /* LLD_TARGET_SPECIFIC_INC_H */
