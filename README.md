@@ -7,7 +7,7 @@ New: Facebook page created:
 
 https://www.facebook.com/diyefis/
 
-We will be posting to this regularly as the 2017 build gets closer.  This project has designs from 2016 that have been tested.  The code has been subsntially re-written and will be release when flight testing is completed.
+This project has designs from 2016 that have been tested.
 
 The project has 3 core streams:
 
